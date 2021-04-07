@@ -1,0 +1,5 @@
+env/
+.github/
+.git/
+__pycache__/
+flask_session/
