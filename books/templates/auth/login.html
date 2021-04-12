@@ -3,24 +3,22 @@
 
 {% block content %}
 <div class="container">
-    {% with messages = get_flashed_messages(with_categories = True)%}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{category}}">
-        {{message}}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
     <div class="row justify-content-center mt-5">
-        <h1 class="text-center mb-3">Create Account</h1>
+        <small class="message container text-center" style="color: red;">
+            {% with messages = get_flashed_messages(with_categories = True)%}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{category}}">
+                {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </small>
+        <h1 class="text-center mb-3">Login</h1>
         <div class="col-4">
             <form method="post" action="" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
-                <div class="form-check mb-3">
-                    <label for="floatingInput">{{form.username.label}}</label>
-                    {{form.username(class="form-control", id="floatingInput",placeholder="@username")}}
-                </div>
                 <div class="form-check mb-3">
                     <label for="floatingInput">{{form.email.label}}</label>
                     {{form.email(class="form-control", id="floatingInput",placeholder="name@example.com")}}
@@ -30,11 +28,13 @@
                     {{form.password(class="form-control", id="floatingInput",placeholder="Password")}}
                 </div>
                 <div class="mb-3 form-check">
-                    <label for="floatingPassword">{{form.confirm_password.label}}</label>
-                    {{form.confirm_password(class="form-control", id="floatingInput",placeholder="Repeat Password")}}
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        {{form.remember_me.label}}
+                    </label>
+                    {{form.remember_me(class="form-check-input", id="flexCheckDefault")}}
                 </div>
                 <div class="mb-3 form-check">
-                    {{form.register_btn(class = "btn btn-outline-primary")}}
+                    {{form.login_btn(class = "btn btn-outline-primary")}}
                 </div>
             </form>
         </div>

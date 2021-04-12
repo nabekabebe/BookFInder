@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mt-5">Welcome {{username}}</h1>
+    <p class="text-center">Search for +5000 books with their reviews</p>
+    <div class="input-group my-4">
+        <input type="text" class="form-control" placeholder="Search books" aria-label="Recipient's username"
+            aria-describedby="basic-addon2">
+        <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% if books %}
+            {% for book in books %}
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{book.title}}</h5>
+                        <p class="card-text">Book Description</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Author: <i>{{book.author}}</i></li>
+                        <li class="list-group-item">Publication Year: <time>{{book.year}}</time></li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="#" class="card-link">{{book.getBookAmazonLink()}}</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p>No books found!</p>
+            {% endfor %}
+            {% else %}
+            <p class="text-center mt-5">No books found!</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
