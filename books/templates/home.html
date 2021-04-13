@@ -11,8 +11,7 @@
     </div>
     <div class="container">
         <div class="row">
-            {% if books %}
-            {% for book in books %}
+            {% for book in book_list %}
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
@@ -21,19 +20,17 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">Author: <i>{{book.author}}</i></li>
-                        <li class="list-group-item">Publication Year: <time>{{book.year}}</time></li>
+                        <li class="list-group-item">Publication Year: <time>{{book.getPublicationYear()}}</time>
+                        </li>
                     </ul>
                     <div class="card-body">
-                        <a href="#" class="card-link">{{book.getBookAmazonLink()}}</a>
+                        <a href={{book.getBookAmazonLink()}} target="_blank" class="card-link">Buy on Amazon</a>
                     </div>
                 </div>
             </div>
             {% else %}
-            <p>No books found!</p>
+            <p class="text-center mt-5">No books found! </p>
             {% endfor %}
-            {% else %}
-            <p class="text-center mt-5">No books found!</p>
-            {% endif %}
         </div>
     </div>
 

@@ -1,9 +1,12 @@
 from flask import render_template, url_for, redirect, flash, request, session, abort, current_app, g
 from markupsafe import escape
+from sqlalchemy import or_
 
 from books.app import app, conn, db
-from books.models import users
+from books.models import users, BookModel, books
 from books.forms import RegistrationForm, LoginForm
+
+from datetime import datetime
 
 
 @app.route('/register', methods=('GET', 'POST'))
@@ -71,5 +74,15 @@ def home():
             user_query = users.select().where(users.c.id == session['user_id'])
             g.user = conn.execute(user_query).fetchone()
             print(g.user.username)
-        return render_template('home.html', title="index")
+
+        bQuery = books.select().where(
+            or_(
+                books.c.title.like("%Abhorsen%"),
+                books.c.isbn.like("159463%"),
+                books.c.author.like("%Stephenson%")
+            )
+        )
+        bl = conn.execute(bQuery).fetchall()
+        book_list = [BookModel.bookFactory(r[1:]) for r in bl]
+        return render_template('home.html', title="index", book_list=book_list)
     return render_template('index.html', title="Home")
