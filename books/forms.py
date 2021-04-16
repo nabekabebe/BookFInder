@@ -24,3 +24,6 @@ class LoginForm(FlaskForm):
     ])
     remember_me = BooleanField('Remember me')
     login_btn = SubmitField('Sign In')
+
+class BooksSearchForm(FlaskForm):
+    search = StringField('')

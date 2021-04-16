@@ -3,7 +3,9 @@ import os
 from flask import Flask
 from flask_session import Session
 from sqlalchemy import create_engine
-# from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker
+
+from books.api import api
 
 app = Flask(__name__)
 # Check for environment variable
@@ -19,4 +21,5 @@ Session(app)
 
 engine = create_engine(os.getenv("DATABASE_URL"), echo=True)
 conn = engine.connect()
-# db = scoped_session(sessionmaker(bind=engine))
+db = scoped_session(sessionmaker(bind=engine))
+app.register_blueprint(api)
