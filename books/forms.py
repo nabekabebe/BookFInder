@@ -16,7 +16,7 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Email Address', [DataRequired(
+    email = StringField('Email', [DataRequired(
         message="Can't be empty!"), Length(min=6, max=35)])
     password = PasswordField('New Password', [
         DataRequired(message="Can't be empty!"),
@@ -24,6 +24,7 @@ class LoginForm(FlaskForm):
     ])
     remember_me = BooleanField('Remember me')
     login_btn = SubmitField('Sign In')
+
 
 class BooksSearchForm(FlaskForm):
     search = StringField('')

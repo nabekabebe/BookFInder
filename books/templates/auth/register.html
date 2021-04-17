@@ -19,25 +19,23 @@
         <div class="col-4">
             <form method="post" action="" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
-                <div class="form-check mb-3">
-                    <label for="floatingInput">{{form.username.label}}</label>
-                    {{form.username(class="form-control", id="floatingInput",placeholder="@username")}}
+                <div class="form-outline mb-4">
+                    {{ form.username(class="form-control", id="floatingInput") }}
+                    <label class="form-label" for="form1Example1">{{form.username.label}}</label>
                 </div>
-                <div class="form-check mb-3">
-                    <label for="floatingInput">{{form.email.label}}</label>
-                    {{form.email(class="form-control", id="floatingInput",placeholder="name@example.com")}}
+                <div class="form-outline mb-4">
+                    {{ form.email(class="form-control", id="floatingInput") }}
+                    <label class="form-label" for="form1Example1">{{form.email.label}}</label>
                 </div>
-                <div class="mb-3 form-check">
-                    <label for="floatingPassword">{{form.password.label}}</label>
-                    {{form.password(class="form-control", id="floatingInput",placeholder="Password")}}
+                <div class="form-outline mb-4">
+                    {{form.password(class="form-control", id="floatingInput")}}
+                    <label class="form-label" for="floatingPassword">{{form.password.label}}</label>
                 </div>
-                <div class="mb-3 form-check">
-                    <label for="floatingPassword">{{form.confirm_password.label}}</label>
-                    {{form.confirm_password(class="form-control", id="floatingInput",placeholder="Repeat Password")}}
+                <div class="form-outline mb-4">
+                    {{form.confirm_password(class="form-control", id="floatingInput")}}
+                    <label class="form-label" for="floatingPassword">{{form.confirm_password.label}}</label>
                 </div>
-                <div class="mb-3 form-check">
-                    {{form.register_btn(class = "btn btn-outline-primary")}}
-                </div>
+                {{form.register_btn(type="submit",class="btn btn-primary btn-block")}}
             </form>
         </div>
     </div>

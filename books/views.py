@@ -7,7 +7,6 @@ from markupsafe import escape
 from books.models import BookModel
 from books.forms import RegistrationForm, LoginForm, BooksSearchForm
 from books.utils.db_helper import InsertUser, GetOne, GetAll
-
 view_bp = Blueprint('app', __name__, url_prefix='/')
 
 """

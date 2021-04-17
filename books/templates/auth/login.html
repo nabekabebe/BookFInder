@@ -21,13 +21,13 @@
                 {{ form.hidden_tag() }}
                 <!-- Email input -->
                 <div class="form-outline mb-4">
-                    <input type="email" id="form1Example1" class="form-control" />
-                    {{form.email(class="form-label", id="floatingInput")}}
+                    {{ form.email(type="email",id="form1Example1",class="form-control") }}
+                    <label class="form-label" for="form1Example1">{{form.email.label}}</label>
                 </div>
 
                 <!-- Password input -->
                 <div class="form-outline mb-4">
-                    <input type="password" id="form1Example2" class="form-control" />
+                    {{ form.password(type="password",id="form1Example2",class="form-control") }}
                     <label class="form-label" for="form1Example2">Password</label>
                 </div>
 
@@ -36,8 +36,8 @@
                     <div class="col d-flex justify-content-center">
                         <!-- Checkbox -->
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
-                            <label class="form-check-label" for="form1Example3"> Remember me </label>
+                            {{ form.remember_me(class="form-check-input",type="checkbox",value="",id="form1Example3") }}
+                            <label class="form-check-label" for="form1Example3">{{ form.remember_me.label }}</label>
                         </div>
                     </div>
 
@@ -48,27 +48,7 @@
                 </div>
 
                 <!-- Submit button -->
-                <button type="submit" class="btn btn-primary btn-block">Sign in</button>
-            </form>
-            <form method="post" action="" enctype="multipart/form-data">
-                {{ form.hidden_tag() }}
-                <div class="form-check mb-3">
-                    <label for="floatingInput">{{form.email.label}}</label>
-                    {{form.email(class="form-control", id="floatingInput",placeholder="name@example.com")}}
-                </div>
-                <div class="mb-3 form-check">
-                    <label for="floatingPassword">{{form.password.label}}</label>
-                    {{form.password(class="form-control", id="floatingInput",placeholder="Password")}}
-                </div>
-                <div class="mb-3 form-check">
-                    <label class="form-check-label" for="flexRadioDefault1">
-                        {{form.remember_me.label}}
-                    </label>
-                    {{form.remember_me(class="form-check-input", id="flexCheckDefault")}}
-                </div>
-                <div class="mb-3 form-check">
-                    {{form.login_btn(class = "btn btn-outline-primary")}}
-                </div>
+                {{form.login_btn(type="submit",class="btn btn-primary btn-block")}}
             </form>
         </div>
     </div>

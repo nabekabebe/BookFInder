@@ -1,6 +1,5 @@
 # Set up database
 from datetime import datetime
-import json
 from urllib.parse import quote, urlparse
 from marshmallow import Schema
 # from sqlalchemy import Table, Column, String, Integer, Text, MetaData, Date
@@ -55,7 +54,7 @@ class BookSchema(Schema):
     """ Book dict serializer """
     class Meta:
         # fields to serialize
-        fields = ('id', 'isbn', 'title', 'author')
+        fields = ('id', 'isbn', 'title', 'author', 'year')
 
 
 book_schema = BookSchema()
