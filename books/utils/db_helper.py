@@ -13,7 +13,7 @@ def InsertUser(values):
     print(id.lastrowid)
 
 
-def GetAll(stmt, values):
+def GetAll(stmt, values=None):
     q = text(stmt)
     return db.execute(q, values).fetchall()
 

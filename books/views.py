@@ -7,6 +7,8 @@ from markupsafe import escape
 from books.models import BookModel
 from books.forms import RegistrationForm, LoginForm, BooksSearchForm
 from books.utils.db_helper import InsertUser, GetOne, GetAll
+from sqlalchemy import text
+
 view_bp = Blueprint('app', __name__, url_prefix='/')
 
 """
@@ -54,9 +56,12 @@ def home():
     print("HERE", searchForm.search.data)
     if request.method == 'POST' and searchForm.search.data:
         sq = escape(searchForm.search.data)
-        query = "SELECT * FROM books WHERE id LIKE %(:id) OR isbn LIKE %(:isbn) OR title LIKE '%:title' LIMIT :limit"
-        bQuery = GetAll(query, {'limit': 10, 'id': sq,
-                        'isbn': sq, 'title': sq})
+        query = text(
+            f"SELECT * FROM books WHERE (title LIKE :title OR isbn LIKE :isbn OR author LIKE :author) {'LIMIT :limit' if True else ''}")
+        isNum = sq+'%' if sq.isdigit() else '-1'
+        sq = sq+'%'
+        bQuery = GetAll(
+            query, {'limit': 10, 'title': sq, 'isbn': isNum, 'author': sq})
 
         print("Query: ", bQuery)
     book_list = [BookModel.bookFactory(r[1:]) for r in bQuery]
