@@ -50,9 +50,6 @@ class BookModel:
                          book_info[2], book_info[3])
         return book
 
-    def getJSON(self):
-        return json.dumps(self)
-
 
 class BookSchema(Schema):
     """ Book dict serializer """

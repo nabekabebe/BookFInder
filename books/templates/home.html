@@ -4,10 +4,10 @@
 <div class="container">
     <h1 class="text-center mt-5">Welcome {{username}}</h1>
     <p class="text-center">Search for +5000 books with their reviews</p>
-    <form action={{ url_for('home') }} method="GET" enctype="tex/plain">
+    <form action={{ url_for('app.home') }} method="POST" enctype="tex/plain">
         <div class="input-group my-5">
             <div class="form-outline">
-                 {{ searchForm.search(type="search",id="form1",class="form-control") }}
+                {{ searchForm.search(type="search",id="form1",class="form-control") }}
                 <!-- <input type="search" id="form1" class="form-control" /> -->
                 <label class="form-label" for="form1">Search</label>
             </div>
@@ -21,17 +21,14 @@
         <div class="row">
             {% for book in book_list %}
             <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-            <div class="card">
-                <img
-                    src="https://mdbootstrap.com/img/new/standard/nature/184.jpg"
-                    class="card-img-top"
-                />
-                <div class="card-body">
-                    <h5 class="card-title">{{book.title}}</h5>
-                    <p class="card-text">
-                    Book Description
-                    </p>
-                    <ul class="list-group list-group-flush">
+                <div class="card">
+                    <img src="https://mdbootstrap.com/img/new/standard/nature/184.jpg" class="card-img-top" />
+                    <div class="card-body">
+                        <h5 class="card-title">{{book.title}}</h5>
+                        <p class="card-text">
+                            Book Description
+                        </p>
+                        <ul class="list-group list-group-flush">
                             <li class="list-group-item">Author: <i>{{book.author}}</i></li>
                             <li class="list-group-item">Publication Year: <time>{{book.getPublicationYear()}}</time>
                             </li>
@@ -39,9 +36,9 @@
                         <div class="card-body">
                             <a href={{book.getBookAmazonLink()}} target="_blank" class="card-link">Buy on Amazon</a>
                         </div>
+                    </div>
                 </div>
-                </div>
-                </div>
+            </div>
             {% else %}
             <p class="text-center mt-5">No books found! </p>
             {% endfor %}
