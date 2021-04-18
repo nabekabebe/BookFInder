@@ -6,7 +6,7 @@ from markupsafe import escape
 
 from books.models import BookModel
 from books.forms import RegistrationForm, LoginForm, BooksSearchForm
-from books.utils.db_helper import InsertUser, GetOne, GetAll
+from books.utils.db_helper import InsertUser, GetOne, GetAll, getBookByIsbn, getBookByTitleOrAuthor
 from sqlalchemy import text
 
 view_bp = Blueprint('app', __name__, url_prefix='/')
@@ -22,6 +22,15 @@ def login_required(view):
         if g.user is None:
             flash("login required!", 'danger')
             return redirect(url_for('app.login'))
+        return view(**kwargs)
+    return wrapped_view
+
+
+def not_login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is not None:
+            return redirect(url_for('app.home'))
         return view(**kwargs)
     return wrapped_view
 
@@ -42,6 +51,7 @@ Webpage views
 
 
 @view_bp.route("/")
+@not_login_required
 def index():
     return render_template("index.html", title="home page")
 
@@ -52,20 +62,46 @@ def home():
     searchForm = BooksSearchForm(request.form)
     query = "SELECT * FROM books LIMIT :limit"
     bQuery = GetAll(query, {'limit': 10})
-    book_list = [BookModel.bookFactory(r[1:]) for r in bQuery]
-    print("HERE", searchForm.search.data)
     if request.method == 'POST' and searchForm.search.data:
         sq = escape(searchForm.search.data)
-        query = text(
-            f"SELECT * FROM books WHERE (title LIKE :title OR isbn LIKE :isbn OR author LIKE :author) {'LIMIT :limit' if True else ''}")
-        isNum = sq+'%' if sq.isdigit() else '-1'
-        sq = sq+'%'
+        query = f"SELECT * FROM books WHERE (title ILIKE :title OR isbn ILIKE :isbn OR author ILIKE :author) {'LIMIT :limit' if False else ''}"
+        isNum = '%'+sq+'%' if sq.isdigit() else '-1'
+        sq = '%'+sq+'%'
         bQuery = GetAll(
             query, {'limit': 10, 'title': sq, 'isbn': isNum, 'author': sq})
-
-        print("Query: ", bQuery)
-    book_list = [BookModel.bookFactory(r[1:]) for r in bQuery]
+        if len(bQuery) == 0:
+            bQuery = getBookByTitleOrAuthor(sq)
+            books_list_fromJson = BookModel.bookFromJSON(bQuery)
+            return render_template('home.html', title="index", book_list=books_list_fromJson, searchForm=searchForm)
+    book_list = [BookModel.bookFactory(r) for r in bQuery]
     return render_template('home.html', title="index", book_list=book_list, searchForm=searchForm)
+
+
+@view_bp.route('/book/<bookId>')
+def bookDetail(bookId):
+    if bookId.isdigit() and int(bookId) < 8000:
+        book = GetOne('books', {'key': 'id', 'value': int(bookId)})
+        model = BookModel.bookFactory(book)
+    else:
+        book = GetOne('books', {'key': 'isbn', 'value': bookId})
+    if book is None:
+        book_info = getBookByIsbn(bookId)
+        model = BookModel.bookFromJSON([book_info["items"][0]])[0]
+    else:
+        model = BookModel.bookFactory(book)
+        try:
+            book_json = book_info.get("items")[0].get("volumeInfo")
+            if book_json:
+                model.desc = book_json.get("description")
+                model.avg_rating = book_json.get("averageRating")
+                model.total_rating = book_json.get("ratingsCount")
+                model.language = book_json.get("language")
+                model.page_num = book_json.get("pageCount")
+                model.image = book_json.get("imageLinks").get(
+                    "thumbnail") if book_json.get("imageLinks") else None
+        except Exception as e:
+            pass
+    return render_template('book_detail.html', book=model, title=model.title)
 
 
 @view_bp.route('/me/<int:id>', methods=('GET', 'POST'))

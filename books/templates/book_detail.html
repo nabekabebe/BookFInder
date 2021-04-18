@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-5">
+    <div class="row">
+        <div class="col-md-6 col-sm-12" style="background: url({{book.image}}) center/cover no-repeat;">
+            <img src={{book.image}} class="img-fluid z-depth-2 rounded" alt="Responsive image">
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <h1>{{book.title}}</h1>
+            <h4>Author: {{book.author}}</h4>
+            <p>Publication Year: {{book.getPublicationYear()}}</p>
+            <p>Description <br /> {{book.desc}}</p>
+            <p>Page Count <br /> {{book.page_num}}</p>
+            <p>Total Rating <br /> {{book.total_rating}}</p>
+            <p>Average Rating <br /> {{book.avg_rating}}</p>
+            <p>Language <br /> {{book.language}}</p>
+            <div style="width: 100px;">
+                <label class="form-label" for="customRange1">Rate 2 of 5 </label>
+                <div class="range">
+                    <input type="range" value="1" min="0" max="5" step="1" class="form-range" id="customRange1" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
