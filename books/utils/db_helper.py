@@ -14,19 +14,24 @@ def InsertUser(values):
     """)
     id = db.execute(
         q, {'username': values['username'], 'email': values['email'], 'password': values['password']})
-    print(id.lastrowid)
+    db.close()
+    return id
 
 
 def GetAll(stmt, values=None):
     q = text(stmt)
-    return db.execute(q, values).fetchall()
+    data = db.execute(q, values).fetchall()
+    db.close()
+    return data
 
 
 def GetOne(db_name, values):
     q = text(f"""
     SELECT * FROM {db_name} WHERE {values['key']} = :holder 
     """)
-    return db.execute(q, {'holder': values['value']}).fetchone()
+    data = db.execute(q, {'holder': values['value']}).fetchone()
+    db.close()
+    return data
 
 
 def getBookByIsbn(isbn):

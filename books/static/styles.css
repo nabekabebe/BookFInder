@@ -1,0 +1,62 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+body {
+  height: 100%;
+  width: 100%;
+}
+/* body {
+  min-height: 100vh;
+  z-index: -1;
+  background: url('https://cdn.pixabay.com/photo/2017/07/02/09/03/books-2463779__340.jpg')
+    center/cover no-repeat;
+}
+#langing-page {
+  height: 100%;
+} */
+
+.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+.rating > span {
+  display: inline-block;
+  position: relative;
+  width: 0.7em;
+  font-size: large;
+  color: gold;
+}
+
+.rating > span.no {
+  color: grey;
+}
+
+.rating > span:hover:before,
+.rating > span:hover ~ span:before {
+  content: '\2605';
+  position: absolute;
+  color: gold;
+}
+
+span.rate-star-no,
+span.rate-star-yes {
+  position: relative;
+  padding-left: 0.6rem;
+  padding-right: 0.6rem;
+}
+span.rate-star-no::before,
+span.rate-star-yes::before {
+  font-size: x-large;
+  content: '\2605';
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
+span.rate-star-no::before {
+  color: grey;
+}
+span.rate-star-yes::before {
+  color: gold;
+}

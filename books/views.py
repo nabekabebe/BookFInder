@@ -81,29 +81,39 @@ def home():
 def bookDetail(bookId):
     if bookId.isdigit() and int(bookId) < 8000:
         book = GetOne('books', {'key': 'id', 'value': int(bookId)})
-        model = BookModel.bookFactory(book)
     else:
         book = GetOne('books', {'key': 'isbn', 'value': bookId})
     if book is None:
         book_info = getBookByIsbn(bookId)
-        model = BookModel.bookFromJSON([book_info["items"][0]])[0]
+        book_list = book_info.get(
+            "items")[0] if book_info.get("items") else None
+        if book_list is not None:
+            model = BookModel.bookFromJSON([book_list])[0]
+        else:
+            return render_template('404.html'), 404
     else:
         model = BookModel.bookFactory(book)
         try:
-            book_json = book_info.get("items")[0].get("volumeInfo")
-            if book_json:
-                model.desc = book_json.get("description")
-                model.avg_rating = book_json.get("averageRating")
-                model.total_rating = book_json.get("ratingsCount")
-                model.language = book_json.get("language")
-                model.page_num = book_json.get("pageCount")
-                model.image = book_json.get("imageLinks").get(
-                    "thumbnail") if book_json.get("imageLinks") else None
+            book_json = getBookByIsbn(book.isbn).get(
+                "items")[0] if getBookByIsbn(book.isbn).get("items") else None
+            book_volume = book_json.get(
+                "volumeInfo") if book_json else None
+            if book_volume:
+                model.desc = book_volume.get("description")
+                model.avg_rating = int(book_volume.get("averageRating"))
+                model.total_rating = book_volume.get("ratingsCount")
+                model.language = book_volume.get("language")
+                model.page_num = book_volume.get("pageCount")
+                model.image = book_volume.get("imageLinks").get(
+                    "thumbnail") if book_volume.get("imageLinks") else None
+
         except Exception as e:
+            print("crashed", e)
             pass
     return render_template('book_detail.html', book=model, title=model.title)
 
 
+# @view_bp.route('/book/<id>/review')
 @view_bp.route('/me/<int:id>', methods=('GET', 'POST'))
 @login_required
 def getMe(id):

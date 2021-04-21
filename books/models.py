@@ -75,7 +75,8 @@ class BookModel:
                 try:
                     book_model.desc = book_json.get("description")
                     book_model.avg_rating = book_json.get("averageRating")
-                    book_model.total_rating = book_json.get("ratingsCount")
+                    book_model.total_rating = int(
+                        book_json.get("ratingsCount"))
                     book_model.language = book_json.get("language")
                     book_model.page_num = book_json.get("pageCount")
                     book_model.image = book_json.get("imageLinks").get(
