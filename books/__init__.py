@@ -16,8 +16,4 @@ def create_app(config='config.py'):
     app.register_blueprint(view_bp)
     app.register_blueprint(api_bp)
 
-    @app.route('/start')
-    def start():
-        return "Hello"
-
     return app

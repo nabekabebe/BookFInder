@@ -2,6 +2,7 @@
 from datetime import datetime
 from urllib.parse import quote, urlparse
 from marshmallow import Schema
+from books.utils.db_helper import GetOne
 # from sqlalchemy import Table, Column, String, Integer, Text, MetaData, Date
 # from books.app import engine, conn
 
@@ -43,10 +44,12 @@ class BookModel:
         self.page_num = None
 
     def getPublicationYear(self):
-        if self.year is datetime:
-            return self.year.strftime('%Y')
-        else:
+        if isinstance(self.year, str):
             return self.year
+        elif self.year is None:
+            return "Unkown"
+        else:
+            return self.year.year
 
     def getBookAmazonLink(self):
         print(
@@ -68,8 +71,10 @@ class BookModel:
                 isbn = book_json.get("industryIdentifiers")[0].get(
                     "identifier") if book_json.get("industryIdentifiers") else None
                 title = book_json.get("title")
-                author = book_json.get("authors")[0]
-                year = book_json.get("publishedDate")
+                author = book_json.get("authors")[0] if book_json.get(
+                    "authors") else "unkown"
+                year = datetime(int(book_json.get("publishedDate")), 1, 1) if len(
+                    book_json.get("publishedDate").strip()) == 4 else book_json.get("publishedDate")
                 book_model = BookModel(isbn=isbn, title=title,
                                        author=author, year=year)
                 try:
@@ -87,6 +92,32 @@ class BookModel:
         return book_list
 
 
+class ReviewModel:
+    def __init__(self, id, userId, bookId, comment, ratings, review, date):
+        self.id = id
+        self.userId = userId
+        self.bookId = bookId
+        self.review = review
+        self.comment = comment
+        self.ratings = ratings
+        self.date = date
+
+    @staticmethod
+    def reviewFromTuple(reviewList):
+        reviews = []
+        for rev in reviewList:
+            revObj = ReviewModel(rev[0], rev[1], rev[2],
+                                 rev[3], rev[4], rev[5], rev[8])
+            revObj.name = GetOne('users', {'key': 'id',
+                                           'value': int(rev[1])})[1]
+            reviews.append(revObj)
+        return reviews
+
+    # def __repr__(self):
+    #     print(
+    #         f"Review(id:{self.id}, userId:{self.userId}, bookId:{self.bookId}, ratings:{self.ratings}")
+
+
 class BookSchema(Schema):
     """ Book dict serializer """
     class Meta:
@@ -94,5 +125,16 @@ class BookSchema(Schema):
         fields = ('id', 'isbn', 'title', 'author', 'year')
 
 
+class ReviewSchema(Schema):
+    """ Book dict serializer """
+    class Meta:
+        # fields to serialize
+        fields = ('id', 'userid', 'bookid', 'comment',
+                  'ratings', 'review', 'date')
+
+
 book_schema = BookSchema()
 book_schemas = BookSchema(many=True)
+
+review_schema = ReviewSchema()
+review_schemas = ReviewSchema(many=True)

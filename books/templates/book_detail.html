@@ -10,18 +10,21 @@
             <div class="book-header d-flex align-items-center justify-content-between">
                 <h1>{{book.title}}</h1>
                 <div>
-                    Total Reviews {{book.total_rating}}
+                    Total Reviews {{book.total_rating + reviews|length if reviews else 0}}
                     <div class="d-flex align-items-center">
+                        {% set totalR = ((book.avg_rating + totalRating) / 2) if book.avg_rating else 0 %}
+                        {% if totalR %}
                         <div class="rating">
-                            {% for i in range(5 - book.avg_rating) %}
+                            {% for i in range(5 - totalR|int) %}
                             <span class="no">&starf;</span>
                             {% endfor %}
-                            {% for i in range(book.avg_rating) %}
+                            {% for i in range(totalR|int) %}
                             <span>&starf;</span>
                             {% endfor %}
                         </div>
+                        {% endif %}
                         <div class="px-2">
-                            {{book.avg_rating}}/5
+                            {{totalR}}/5
                         </div>
                     </div>
                 </div>
@@ -35,75 +38,77 @@
     </div>
     <div class="row gx-5">
         <div class="col-md-8 col-sm-12">
-            <h2>Reviews</h2>
+            <div class="d-flex align-items-center justify-content-between">
+                <h2>Reviews</h2>
+            </div>
+            {% for review in reviews %}
             <div class="card my-3">
-                <div class="card-header d-flex align-items-center">
-                    <a type="button" class="btn-floating btn-lg btn-yt"><img
-                            src="https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651__340.png"
-                            class="rounded-circle z-depth-0" alt="avatar image" height="40" /></i></a>
-                    <div>Thomas Shelby</div>
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <a type="button" class="btn-floating btn-lg btn-yt"><img
+                                src="https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651__340.png"
+                                class="rounded-circle z-depth-0" alt="avatar image" height="40" /></i></a>
+                        <div>{{review.name}}</div>
+                    </div>
+                    {% if review.userId == session['user_id'] %}
+                    <a href={{ url_for('app.review_delete', reviewId=review.id, userId=session['user_id']) }}>
+                        <div class="px-3" style="color: red; cursor: pointer;"><i class="fas fa-trash"></i></div>
+                    </a>
+                    {% endif %}
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Amazing book!</h5>
+                    <h5 class="card-title">{{review.comment}}</h5>
                     <p class="card-text">
-                        I have read this book last summer and it has been greate.
+                        {{review.review}}
                     </p>
 
                     <p class="mt-5">Rating
-                        <span class="rate-star-yes"></span><span class="rate-star-yes"></span><span
-                            class="rate-star-yes"></span><span class="rate-star-yes"></span><span
-                            class="rate-star-no"></span> 4/5
+                        {% for i in range(review.ratings) %}
+                        <span class="rate-star-yes"></span>
+                        {% endfor %}
+                        {% for i in range(5 - review.ratings) %}
+                        <span class="rate-star-no"></span>
+                        {% endfor %}
+                        <i class="px-2">{{review.ratings}}/5</i>
                     </p>
                 </div>
             </div>
-            <div class="card my-3">
-                <div class="card-header d-flex align-items-center">
-                    <a type="button" class="btn-floating btn-lg btn-yt"><img
-                            src="https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651__340.png"
-                            class="rounded-circle z-depth-0" alt="avatar image" height="40" /></i></a>
-                    <div>Mr. Robot</div>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Totally recommend it!</h5>
-                    <p class="card-text">
-                        Bought it for my grand children they love it!
-                    </p>
-                    <p class="mt-5">Rating
-                        <span class="rate-star-yes"></span><span class="rate-star-yes"></span><span
-                            class="rate-star-yes"></span><span class="rate-star-no"></span><span
-                            class="rate-star-no"></span> 3/5
-                    </p>
-                </div>
-            </div>
+            {% endfor %}
         </div>
         <div class="col-md-4 col-sm-12">
             <h2>Add Review</h2>
-            <form>
+            <p>
+                {% with messages = get_flashed_messages(with_categories = True)%}
+                {% if messages %}
+                {% for category, message in messages %}
+            <div class="alert alert-{{category}}">
+                {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            </p>
+            <form action={{ url_for('app.review', id=book.id if book.id else book.isbn if book.isbn else
+                book.getBookAmazonLink() ) }} method="POST">
+                {{reviewForm.hidden_tag()}}
                 <!-- Name input -->
                 <div class="form-outline mb-4">
-                    <input type="text" id="form1Example1" class="form-control" />
-                    <label class="form-label" for="form1Example1">Name</label>
+                    {{reviewForm.comment(type="text",id="form1Example1",class="form-control")}}
+                    <label class="form-label" for="form1Example1">{{reviewForm.comment.label}}</label>
                 </div>
 
                 <!-- Password input -->
                 <div class="form-outline mb-4">
-                    <select class="form-select form-select-sm">
-                        <option selected>Choose Rating</option>
-                        <option value="1">One⭐</option>
-                        <option value="2">Two⭐</option>
-                        <option value="3">Three⭐</option>
-                        <option value="4">Four⭐</option>
-                        <option value="5">Five⭐</option>
-                    </select>
+                    {{ reviewForm.ratings(class="form-select form-select-sm") }}
                 </div>
                 <!-- Review input -->
                 <div class="form-floating mb-4">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
-                        style="height: 100px"></textarea>
-                    <label for="floatingTextarea2">Write Review</label>
+                    {{reviewForm.review(class="form-control",placeholder="Leave a comment
+                    here",id="floatingTextarea2",style="height: 100px")}}
+                    <label for="floatingTextarea2">{{reviewForm.review.label}}</label>
                 </div>
                 <!-- Submit button -->
-                <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                {{reviewForm.submit(type="submit",class="btn btn-primary btn-block")}}
             </form>
         </div>
     </div>

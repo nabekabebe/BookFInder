@@ -14,24 +14,82 @@ def InsertUser(values):
     """)
     id = db.execute(
         q, {'username': values['username'], 'email': values['email'], 'password': values['password']})
-    db.close()
+    db.commit()
     return id
 
 
 def GetAll(stmt, values=None):
     q = text(stmt)
     data = db.execute(q, values).fetchall()
-    db.close()
+    db.commit()
     return data
 
 
 def GetOne(db_name, values):
     q = text(f"""
-    SELECT * FROM {db_name} WHERE {values['key']} = :holder 
+    SELECT * FROM {db_name} WHERE {values['key']} = :h
     """)
-    data = db.execute(q, {'holder': values['value']}).fetchone()
-    db.close()
+    data = db.execute(q, {'h': values['value']}).fetchone()
+    db.commit()
     return data
+
+
+def DeleteOne(db_name, values):
+    q = text(f"""
+    DELETE FROM {db_name} WHERE {values['key']} = :h
+    """)
+    db.execute(q, {'h': values['value']})
+    db.commit()
+
+
+def getReviewByUserAndBook(userId, bookId):
+    q = text(f"""
+    SELECT * FROM reviews WHERE userId = :uid AND bookId = :bid
+    """)
+    data = db.execute(q, {'uid': userId, 'bid': bookId}).fetchone()
+    return data
+
+
+def InsertIntoReview(values):
+    q = text("""
+    INSERT INTO reviews (userId,bookId,comment,ratings, review)
+        VALUES (:userId,:bookId,:comment,:ratings, :review)
+    """)
+
+    id = db.execute(
+        q, {'userId': values['userId'], 'bookId': values['bookId'], 'ratings': values['ratings'], 'comment': values['comment'], 'review': values['review']})
+    db.commit()
+    return id
+
+
+def InsertIntoBooks(values):
+    q = text("""
+    INSERT INTO books (id,isbn,title,author,year)
+        VALUES (:id,:isbn,:title,:author,:year)
+    """)
+
+    id = db.execute(
+        q, {'id': values['id'], 'isbn': values['isbn'], 'title': values['title'], 'author': values['author'], 'year': values['year']})
+    db.commit()
+    return id
+
+
+def updateReviewLikeDislike(values, action):
+    if(action > 0):
+        q = text(f"""
+        UPDATE reviews SET {values['key']} = {values['key']} + 1 WHERE id = :id 
+        """)
+    elif action < 0:
+        q = text(f"""
+        UPDATE reviews SET {values['key']} = {values['key']} - 1 WHERE id = :id
+        """)
+    else:
+        q = text(f"""
+        UPDATE reviews SET {values['key']} = {values['value']} WHERE id = :id 
+        """)
+    id = db.execute(q, {'id': values['id']})
+    db.commit()
+    return id
 
 
 def getBookByIsbn(isbn):
