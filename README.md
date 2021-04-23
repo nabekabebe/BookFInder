@@ -1,4 +1,4 @@
-# Project 1: Books
+# Project 1: Books by Nabek Abebe
 
 This project is focused on providing books from different sources with their
 reviews and ratings.
@@ -11,6 +11,26 @@ able to search for books, leave reviews for individual books, and see the
 reviews made by other people. Also a third-party API by Google Books is used to
 pull in ratings from a google online book store. Finally, users will be able to
 query for book details and book reviews the website’s API.
+
+# Features
+
+1. The website fetches books from local database with more than 5000 books pre
+   populated.
+2. Users can search for books by book ISBN, title and author.
+3. If book are not found on the local database the website will query the Google
+   Books API and display the books.
+4. For every book queried the website will perform additional api query to
+   populate the response with reach book details like total google books rating
+   and local user ratings and reviews, book cover image, publication year,
+   authors, book descriptions and so on.
+5. The website will provide Amazon link to purchase the books listed.
+6. Users can put their own reviews and rating which will get merged with the
+   review and rating provided by other site users and also ratings from the
+   google API contributing to the overall ratings and number of book's review.
+7. Users cannot add multiple reviews for the same book although they can delete
+   their own review and add another.
+8. The Website provides convinient way to get books and reviews from dedicated
+   api. The api method supported is only the http "GET" method.
 
 ## Run the application:
 
@@ -41,111 +61,37 @@ query for book details and book reviews the website’s API.
 8. If you navigate to the URL provided by flask, you should see the text "Home
    page of the website"! ![alt text](./flask.png)
 
-## Goodreads API
+## API Usage
 
-Goodreads is a popular book review website, and we’ll be using their API in this
-project to get access to their review data for individual books.
+The website provides API access to query books and review using nicely formatted
+Swagger UI. The api doesn't require and authentication or developer keys.
 
-1. Go to [https://www.goodreads.com/api] and sign up for a Goodreads account if
-   you don’t already have one.
+Navigate To: http://127.0.0.1:5000/api/v1/ to visit the API page for locally
+hosted application.
 
-2. Navigate to [https://www.goodreads.com/api/keys] and apply for an API key.
-   For “Application name” and “Company name” feel free to just write “project1,”
-   and no need to include an application URL, callback URL, or support URL.
-3. You should then see your API key. (For this project, we’ll care only about
-   the “key”, not the “secret”.)
-4. You can now use that API key to make requests to the Goodreads API,
-   documented here. In particular, Python code like the below
+Sample Book Response:
 
-```python
-import requests
-res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "KEY", "isbns": "9781632168146"})
-print(res.json())
-```
-
-where KEY is your API key, will give you the review and rating data for the book
-with the provided ISBN number. In particular, you might see something like this
-dictionary:
-
-```json
+```json: books> id=2
 {
-  "books": [
-    {
-      "id": 29207858,
-      "isbn": "1632168146",
-      "isbn13": "9781632168146",
-      "ratings_count": 0,
-      "reviews_count": 1,
-      "text_reviews_count": 0,
-      "work_ratings_count": 26,
-      "work_reviews_count": 113,
-      "work_text_reviews_count": 10,
-      "average_rating": "4.04"
-    }
-  ]
+  "id": 2,
+  "author": "Susan Cooper",
+  "title": "The Dark Is Rising",
+  "year": "1973-01-01T00:00:00",
+  "isbn": "1416949658"
 }
 ```
 
-Note that work_ratings_count here is the number of ratings that this particular
-book has received, and average_rating is the book’s average score out of 5.
-
-# Requirements
-
-Alright, it’s time to actually build your web application! Here are the
-requirements:
-
-1. **Registration**: Users should be able to register for your website,
-   providing (at minimum) a username and password.
-
-2. **Login**: Users, once registered, should be able to log in to your website
-   with their username and password.
-
-3. **Logout**: Logged in users should be able to log out of the site.
-
-4. **Import**: Provided for you in this project is a file called books.csv,
-   which is a spreadsheet in CSV format of 5000 different books. Each one has an
-   ISBN number, a title, an author, and a publication year. In a Python file
-   called import.py separate from your web application, write a program that
-   will take the books and import them into your PostgreSQL database. You will
-   first need to decide what table(s) to create, what columns those tables
-   should have, and how they should relate to one another. Run this program by
-   running python3 import.py to import the books into your database, and submit
-   this program with the rest of your project code.
-
-5. **Search**: Once a user has logged in, they should be taken to a page where
-   they can search for a book. Users should be able to type in the ISBN number
-   of a book, the title of a book, or the author of a book. After performing the
-   search, your website should display a list of possible matching results, or
-   some sort of message if there were no matches. If the user typed in only part
-   of a title, ISBN, or author name, your search page should find matches for
-   those as well!
-
-6. **Book Page**: When users click on a book from the results of the search
-   page, they should be taken to a book page, with details about the book: its
-   title, author, publication year, ISBN number, and any reviews that users have
-   left for the book on your website.
-
-7. **Review Submission**: On the book page, users should be able to submit a
-   review: consisting of a rating on a scale of 1 to 5, as well as a text
-   component to the review where the user can write their opinion about a book.
-   Users should not be able to submit multiple reviews for the same book.
-
-8. **Goodreads Review Data**: On your book page, you should also display (if
-   available) the average rating and number of ratings the work has received
-   from Goodreads.
-
-9. **API Access**: If users make a GET request to your website’s /api/<isbn>
-   route, where <isbn> is an ISBN number, your website should return a JSON
-   response containing the book’s title, author, publication date, ISBN number,
-   review count, and average score. The resulting JSON should follow the format:
-
-```json
+```json: reviews> bookid=2
 {
-  "title": "Memory",
-  "author": "Doug Lloyd",
-  "year": 2015,
-  "isbn": "1632168146",
-  "review_count": 28,
-  "average_score": 5.0
+  "total_reviews": 1,
+  "reviews": [
+    {
+      "date": "2021-04-23",
+      "ratings": 5,
+      "id": 4,
+      "comment": "Amazing book",
+      "review": "Recommended"
+    }
+  ]
 }
 ```

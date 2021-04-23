@@ -66,12 +66,13 @@ class ReviewByBookId(Resource):
                 code=400, message="Invalid request!")
         reviews = ReviewModel.reviewFromTuple(
             GetAll(f"SELECT * FROM reviews WHERE bookid = {book_id} ORDER BY id DESC"))
-        print(reviews)
         if reviews is None:
             API.abort(
                 code=400, message="Sorry, coudn't find the book!")
             # abort(500, description="The article you are looking for is not found!")
-        return review_schemas.dump(reviews)
+        total_r = len(reviews)
+        r = review_schemas.dump(reviews)
+        return {"total_reviews": total_r, "reviews": r}
 
 
 @ api_bp.errorhandler(404)
