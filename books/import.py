@@ -12,7 +12,8 @@ def rundb():
 
 
 def main():
-    db_path = "postgresql://postgres:niko1122@localhost/BookAPI"
+    # db_path = "postgresql://postgres:niko1122@localhost/BookAPI"
+    db_path = "postgresql://jjjwivytsimjwi:e2bdcc0bd14397dcb667d49cebf96b9fb480f48ee8b4c16f051a52182c16effa@ec2-18-233-83-165.compute-1.amazonaws.com:5432/dc02n7i8oqjtit"
     if len(sys.argv) >= 2 and sys.argv[1]:
         # accept database path
         db_path = sys.argv[1]

@@ -61,6 +61,9 @@ query for book details and book reviews the website’s API.
 8. If you navigate to the URL provided by flask, you should see the text "Home
    page of the website"! ![alt text](./flask.png)
 
+Heroku Database URl =
+postgresql://jjjwivytsimjwi:e2bdcc0bd14397dcb667d49cebf96b9fb480f48ee8b4c16f051a52182c16effa@ec2-18-233-83-165.compute-1.amazonaws.com:5432/dc02n7i8oqjtit
+
 ## API Usage
 
 The website provides API access to query books and review using nicely formatted

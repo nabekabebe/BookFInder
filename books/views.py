@@ -1,7 +1,7 @@
 from datetime import datetime
 import functools
 
-from flask import Blueprint, render_template, url_for, redirect, flash, request, session, abort, g, jsonify
+from flask import Blueprint, render_template, url_for, redirect, flash, request, session, abort, g, jsonify, current_app
 from markupsafe import escape
 
 from books.models import BookModel, ReviewModel
@@ -229,6 +229,7 @@ def login():
     if request.method == "POST":
         if form.validate():
             rememberMe = form.remember_me.data
+            current_app.config['SESSION_PERMANENT'] = True
             user = GetOne('users', {'key': 'email',
                           'value': form.email.data.lower()})
             if(user and user.password == form.password.data):
