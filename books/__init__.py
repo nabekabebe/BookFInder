@@ -5,6 +5,7 @@ from .views import view_bp
 from .api import api_bp
 from .db import db
 from .init_api import API
+from .config import *
 
 
 def create_app(config='config.py'):

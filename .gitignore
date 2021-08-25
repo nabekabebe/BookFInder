@@ -3,3 +3,4 @@ env/
 .git/
 __pycache__/
 flask_session/
+.env

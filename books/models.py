@@ -3,30 +3,6 @@ from datetime import datetime
 from urllib.parse import quote, urlparse
 from marshmallow import Schema
 from books.utils.db_helper import GetOne
-# from sqlalchemy import Table, Column, String, Integer, Text, MetaData, Date
-# from books.app import engine, conn
-
-
-# meta = MetaData()
-
-# users = Table(
-#     'users', meta,
-#     Column('id', Integer, primary_key=True),
-#     Column('username', String, nullable=False),
-#     Column('email', String, unique=True, nullable=False),
-#     Column('password', String, nullable=False)
-# )
-
-# books = Table(
-#     'books', meta,
-#     Column('id', Integer, primary_key=True),
-#     Column('isbn', String, nullable=False, unique=True),
-#     Column('title', String, nullable=False),
-#     Column('author', String, nullable=False),
-#     Column('year', Date, nullable=False)
-# )
-
-# meta.create_all(engine)
 
 
 class BookModel:
@@ -112,10 +88,6 @@ class ReviewModel:
                                            'value': int(rev[1])})[1]
             reviews.append(revObj)
         return reviews
-
-    # def __repr__(self):
-    #     print(
-    #         f"Review(id:{self.id}, userId:{self.userId}, bookId:{self.bookId}, ratings:{self.ratings}")
 
 
 class BookSchema(Schema):

@@ -4,7 +4,7 @@ from sqlalchemy.exc import StatementError
 from sqlalchemy.orm import scoped_session, sessionmaker
 from datetime import datetime as dtime
 import sys
-import os
+from .config import DATABASE_URL
 
 
 def rundb():
@@ -12,14 +12,13 @@ def rundb():
 
 
 def main():
-    # db_path = "postgresql://postgres:niko1122@localhost/BookAPI"
-    db_path = "postgresql://jjjwivytsimjwi:e2bdcc0bd14397dcb667d49cebf96b9fb480f48ee8b4c16f051a52182c16effa@ec2-18-233-83-165.compute-1.amazonaws.com:5432/dc02n7i8oqjtit"
+    db_path = DATABASE_URL
     if len(sys.argv) >= 2 and sys.argv[1]:
         # accept database path
         db_path = sys.argv[1]
     else:
         raise RuntimeError(
-            "DATABASE_URL is not specified in the command arguments!")
+            "DATABASE type is not specified in the command arguments! set DATABASE_TYPE to LOCAL or REMOTE")
 
     engine = create_engine(
         db_path, isolation_level="READ UNCOMMITTED")

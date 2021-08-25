@@ -1,4 +1,4 @@
-# Project 1: Books by Nabek Abebe
+# BOOK FINDER APPLICATION: by Nabek Abebe
 
 This project is focused on providing books from different sources with their
 reviews and ratings.
@@ -11,6 +11,8 @@ able to search for books, leave reviews for individual books, and see the
 reviews made by other people. Also a third-party API by Google Books is used to
 pull in ratings from a google online book store. Finally, users will be able to
 query for book details and book reviews the website’s API.
+
+![alt text](./book_finder.png)
 
 # Features
 
@@ -49,21 +51,24 @@ query for book details and book reviews the website’s API.
    and will automatically reload the web application whenever you save a change
    to a file.
 
-5. Set the environment variable DATABASE_URL (online database or local postgres
-   database).
+5. Set the environment variable DATABASE_TYPE to LOCAL for local database
+   server, the default is REMOTE. Provide LOCAL and/or REMOTE DATABASE_PATH in
+   the .env file in the root directory of the application.
 
 6. Before running the application separately run the import.py file in the
    project to setup the database tables (necessary!). (provide database URL from
    the terminal to the enviroment!)
 
-7. Run flask run to start up your Flask application by typing flask run on the
-   terminal.
+7. Excute <b>flask run</b> command to start your Flask application by typing
+   flask run on the terminal.
 
 8. If you navigate to the URL provided by flask, you should see the text "Home
-   page of the website"! ![alt text](./flask.png)
+   page of the website"! ![alt text](./setup.png)
 
-=> Heroku Database URl =
-postgresql://jjjwivytsimjwi:e2bdcc0bd14397dcb667d49cebf96b9fb480f48ee8b4c16f051a52182c16effa@ec2-18-233-83-165.compute-1.amazonaws.com:5432/dc02n7i8oqjtit
+# .env
+
+DB_PATH_LOCAL, DB_PATH_REMOTE, SECRET_KEY, GOOGLE_API_KEY needs to be set in the
+.env file.
 
 ## API Usage
 

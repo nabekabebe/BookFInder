@@ -2,9 +2,10 @@ from sqlalchemy import text
 from markupsafe import escape
 from books.db import db
 import requests
+from books.config import GOOGLE_API_KEY
 
-API_KEY = "AIzaSyCze2V2UZG7rmcpGOD6x1a1bAydFKluJOQ"
-API_URL = "https://www.googleapis.com/books/v1/volumes?q=isbn:&key="
+API_KEY = GOOGLE_API_KEY
+BASE_API_URL = "https://www.googleapis.com/books/v1/volumes?q"
 
 
 def InsertUser(values):
@@ -93,14 +94,14 @@ def updateReviewLikeDislike(values, action):
 
 
 def getBookByIsbn(isbn):
-    endpoint = "https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}&key={key}".format(
+    endpoint = BASE_API_URL+"isbn:{isbn}&key={key}".format(
         isbn=isbn, key=API_KEY)
     data = requests.get(endpoint).json()
     return data
 
 
 def getBookByTitleOrAuthor(titleOrAuthor):
-    endpoint = "https://www.googleapis.com/books/v1/volumes?q=intitle:{title}&inauthor:{author}&key={key}".format(
+    endpoint = BASE_API_URL+"intitle:{title}&inauthor:{author}&key={key}".format(
         title=titleOrAuthor, author=titleOrAuthor, key=API_KEY)
 
     try:
